@@ -1,43 +1,55 @@
-import prisma from "../lib/prisma"
+import { type Metadata } from 'next'
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
+import { Geist, Geist_Mono } from 'next/font/google'
+import './globals.css'
 
-export default async function Home() {
-  let users: Array<{
-    id: number
-    email: string
-    name: string | null
-    createdAt: Date
-    updatedAt: Date
-  }> = []
-  let error = null
+const geistSans = Geist({
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+})
 
-  try {
-    users = await prisma.user.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-    })
-  } catch (e) {
-    console.error("Error fetching users:", e)
-    error = "Failed to load users. Make sure your DATABASE_URL is configured."
-  }
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+})
 
+export const metadata: Metadata = {
+  title: 'nodo',
+  description: 'Hub to personal links',
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
   return (
-    <main className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Users from Database</h1>
-      {error ? (
-        <p className="text-red-500">{error}</p>
-      ) : users.length === 0 ? (
-        <p>No users yet. Create one using the API at /api/users</p>
-      ) : (
-        <ul className="space-y-2">
-          {users.map((user) => (
-            <li key={user.id} className="border p-4 rounded">
-              <p className="font-semibold">{user.name || "No name"}</p>
-              <p className="text-sm text-gray-600">{user.email}</p>
-            </li>
-          ))}
-        </ul>
-      )}
-    </main>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          <header className="flex justify-end items-center p-4 gap-4 h-16">
+            <SignedOut>
+              <SignInButton />
+              <SignUpButton>
+                <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </header>
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }
