@@ -1,7 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import prisma from "@/lib/prisma";
-import { claimUsername } from "./actions";
+import { claimUsername, addLink, deleteLink } from "./actions";
 
 export default async function Home() {
   const user = await currentUser();
@@ -107,6 +107,46 @@ export default async function Home() {
           </p>
         </div>
 
+        {/* Formulario para agregar link */}
+        <div className="bg-white rounded-3xl shadow-sm border border-[#E5E5E5] p-8 md:p-10 mb-6">
+          <h2 className="text-xl font-bold mb-6">Agregar link</h2>
+          <form action={addLink} className="space-y-4">
+            <div>
+              <label htmlFor="title" className="block text-sm font-semibold mb-2">
+                Título
+              </label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                required
+                placeholder="Mi sitio web"
+                className="w-full bg-[#F7F7F7] rounded-2xl border border-[#E5E5E5] px-4 py-4 outline-none focus:border-[#FFDD00] transition-colors"
+              />
+            </div>
+            <div>
+              <label htmlFor="url" className="block text-sm font-semibold mb-2">
+                URL
+              </label>
+              <input
+                type="url"
+                id="url"
+                name="url"
+                required
+                placeholder="https://ejemplo.com"
+                className="w-full bg-[#F7F7F7] rounded-2xl border border-[#E5E5E5] px-4 py-4 outline-none focus:border-[#FFDD00] transition-colors"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full py-4 px-8 bg-[#FFDD00] text-black rounded-full font-semibold text-lg hover:bg-[#f5d400] transition-colors cursor-pointer"
+            >
+              Agregar link
+            </button>
+          </form>
+        </div>
+
+        {/* Lista de links */}
         <div className="bg-white rounded-3xl shadow-sm border border-[#E5E5E5] p-8 md:p-10">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold">Tus links</h2>
@@ -117,28 +157,34 @@ export default async function Home() {
 
           {dbUser.links.length === 0 ? (
             <div className="text-center py-10">
-              <p className="text-[#6B7280] text-lg mb-6">
-                Aún no tienes links. ¡Agrega tu primer link!
+              <p className="text-[#6B7280] text-lg">
+                Aún no tienes links. ¡Agrega tu primer link arriba!
               </p>
-              <button className="py-4 px-8 bg-[#FFDD00] text-black rounded-full font-semibold text-lg hover:bg-[#f5d400] transition-colors cursor-pointer">
-                Agregar link
-              </button>
             </div>
           ) : (
             <ul className="space-y-3">
               {dbUser.links.map((link) => (
                 <li
                   key={link.id}
-                  className="p-5 bg-[#F7F7F7] rounded-2xl border border-[#E5E5E5] hover:border-[#FFDD00] transition-colors"
+                  className="p-5 bg-[#F7F7F7] rounded-2xl border border-[#E5E5E5] flex items-center justify-between gap-4"
                 >
                   <a
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-semibold text-black hover:text-[#6B7280] transition-colors"
+                    className="font-semibold text-black hover:text-[#6B7280] transition-colors flex-1 truncate"
                   >
                     {link.title}
                   </a>
+                  <form action={deleteLink}>
+                    <input type="hidden" name="linkId" value={link.id} />
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-red-100 text-red-600 rounded-full text-sm font-semibold hover:bg-red-200 transition-colors cursor-pointer"
+                    >
+                      Eliminar
+                    </button>
+                  </form>
                 </li>
               ))}
             </ul>
