@@ -11,8 +11,10 @@ export default async function Home() {
   // Estado 1: Usuario no autenticado
   if (!user) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12">
-        <div className="bg-white rounded-3xl shadow-sm border border-[#E5E5E5] p-10 md:p-14 max-w-md w-full text-center">
+      <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12 relative">
+        {/* Hero radial glow */}
+        <div className="hero-glow" />
+        <div className="card max-w-md w-full text-center p-10 md:p-14 relative z-10">
           <h1 className="text-5xl md:text-6xl font-bold mb-4 tracking-tight">
             Nodo
           </h1>
@@ -45,11 +47,13 @@ export default async function Home() {
   // Estado 2: Autenticado pero sin perfil en DB
   if (!dbUser) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12">
+      <main className="min-h-screen flex flex-col items-center justify-center px-6 py-12 relative">
         <div className="fixed top-6 right-6">
           <UserButton />
         </div>
-        <div className="bg-white rounded-3xl shadow-sm border border-[#E5E5E5] p-10 md:p-14 max-w-md w-full">
+        {/* Hero radial glow */}
+        <div className="hero-glow" />
+        <div className="card max-w-md w-full p-10 md:p-14 relative z-10">
           <h1 className="text-4xl md:text-5xl font-bold mb-3 tracking-tight text-center">
             ¡Bienvenido!
           </h1>
@@ -99,7 +103,7 @@ export default async function Home() {
           <UserButton />
         </header>
 
-        <div className="bg-white rounded-3xl shadow-sm border border-[#E5E5E5] p-8 md:p-10 mb-6">
+        <div className="card p-8 md:p-10 mb-6">
           <p className="text-xl md:text-2xl">
             ¡Hola, <span className="font-bold">@{dbUser.username}</span>!
           </p>
@@ -116,7 +120,7 @@ export default async function Home() {
         </div>
 
         {/* Formulario para agregar link */}
-        <div className="bg-white rounded-3xl shadow-sm border border-[#E5E5E5] p-8 md:p-10 mb-6">
+        <div className="card p-8 md:p-10 mb-6">
           <h2 className="text-xl font-bold mb-6">Agregar link</h2>
           <form action={addLink} className="space-y-4">
             <div>
@@ -155,7 +159,7 @@ export default async function Home() {
         </div>
 
         {/* Lista de links */}
-        <div className="bg-white rounded-3xl shadow-sm border border-[#E5E5E5] p-8 md:p-10">
+        <div className="card p-8 md:p-10">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold">Tus links</h2>
             <span className="bg-[#F7F7F7] text-[#6B7280] px-4 py-2 rounded-full text-sm font-semibold">
