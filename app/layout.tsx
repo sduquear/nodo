@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Nodo",
-  description: "Hub to personal links",
+  description: "Tu hub de links personales",
 };
 
 export default function RootLayout({
@@ -25,9 +25,9 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="es" className="light">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#F7F7F7] text-black min-h-screen`}
         >
           {children}
         </body>
