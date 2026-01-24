@@ -2,6 +2,8 @@ import { currentUser } from "@clerk/nextjs/server";
 import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import prisma from "@/lib/prisma";
 import { claimUsername, addLink, deleteLink } from "./actions";
+import { CopyButton } from "./components/copy-button";
+import { ViewPageButton } from "./components/view-page-button";
 
 export default async function Home() {
   const user = await currentUser();
@@ -101,10 +103,16 @@ export default async function Home() {
           <p className="text-xl md:text-2xl">
             ¡Hola, <span className="font-bold">@{dbUser.username}</span>!
           </p>
-          <p className="text-[#6B7280] mt-2 text-lg">
-            Tu perfil público:{" "}
-            <span className="font-medium text-black">nodo.app/{dbUser.username}</span>
-          </p>
+          <div className="flex items-center justify-between mt-2 gap-4">
+            <p className="text-[#6B7280] text-lg">
+              Tu perfil público:{" "}
+              <span className="font-medium text-black">nodo.app/{dbUser.username}</span>
+            </p>
+            <div className="flex gap-2">
+              <CopyButton username={dbUser.username} />
+              <ViewPageButton username={dbUser.username} />
+            </div>
+          </div>
         </div>
 
         {/* Formulario para agregar link */}
