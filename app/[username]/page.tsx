@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
+import { clerkClient } from "@clerk/nextjs/server"
 import prisma from "@/lib/prisma"
+import { UserAvatar } from "@/app/components/user-avatar"
 
 type Props = {
   params: Promise<{ username: string }>
@@ -18,15 +20,21 @@ export default async function ProfilePage({ params }: Props) {
     notFound()
   }
 
-  const avatarLetter = (user.name?.[0] || user.username[0]).toUpperCase()
+  // Get the Clerk user to obtain the profile picture
+  const client = await clerkClient()
+  const clerkUser = await client.users.getUser(user.clerkId)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 flex flex-col items-center justify-center py-12 px-4">
       {/* Profile card */}
       <div className="card w-full max-w-md text-center">
         {/* Avatar */}
-        <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-4xl font-bold text-white shadow-lg mb-4">
-          {avatarLetter}
+        <div className="flex justify-center mb-4">
+          <UserAvatar
+            imageUrl={clerkUser.imageUrl}
+            name={user.name || user.username}
+            size="lg"
+          />
         </div>
 
         {/* Username & Name */}

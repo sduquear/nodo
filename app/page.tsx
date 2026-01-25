@@ -1,9 +1,10 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { currentUser, clerkClient } from "@clerk/nextjs/server";
 import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import prisma from "@/lib/prisma";
 import { claimUsername, addLink, deleteLink } from "./actions";
 import { CopyButton } from "./components/copy-button";
 import { ViewPageButton } from "./components/view-page-button";
+import { UserAvatar } from "./components/user-avatar";
 
 export default async function Home() {
   const user = await currentUser();
@@ -94,6 +95,10 @@ export default async function Home() {
     );
   }
 
+  // Get the Clerk user to obtain the profile picture
+  const client = await clerkClient()
+  const clerkUser = await client.users.getUser(dbUser.clerkId)
+
   // Estado 3: Autenticado con perfil en DB → Dashboard
   return (
     <main className="min-h-screen px-6 py-8 md:py-12">
@@ -104,9 +109,15 @@ export default async function Home() {
         </header>
 
         <div className="card p-8 md:p-10 mb-6">
-          <p className="text-xl md:text-2xl">
-            ¡Hola, <span className="font-bold">@{dbUser.username}</span>!
-          </p>
+          <div className="flex items-center gap-4 mb-2">
+            <UserAvatar
+              imageUrl={clerkUser.imageUrl}
+              name={dbUser.name || dbUser.username}
+            />
+            <p className="text-xl md:text-2xl">
+              ¡Hola, <span className="font-bold">@{dbUser.username}</span>!
+            </p>
+          </div>
           <div className="flex items-center justify-between mt-2 gap-4">
             <p className="text-[#6B7280] text-lg">
               Tu perfil público:{" "}
