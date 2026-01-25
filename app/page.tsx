@@ -5,6 +5,7 @@ import { claimUsername, addLink, deleteLink } from "./actions";
 import { CopyButton } from "./components/copy-button";
 import { ViewPageButton } from "./components/view-page-button";
 import { UserAvatar } from "./components/user-avatar";
+import { Trash2, Link } from "lucide-react";
 
 export default async function Home() {
   const user = await currentUser();
@@ -180,6 +181,7 @@ export default async function Home() {
 
           {dbUser.links.length === 0 ? (
             <div className="text-center py-10">
+              <Link size={48} className="mx-auto mb-4 text-[#D1D5DB]" />
               <p className="text-[#6B7280] text-lg">
                 Aún no tienes links. ¡Agrega tu primer link arriba!
               </p>
@@ -203,9 +205,10 @@ export default async function Home() {
                     <input type="hidden" name="linkId" value={link.id} />
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-red-100 text-red-600 rounded-full text-sm font-semibold hover:bg-red-200 transition-colors cursor-pointer"
+                      className="p-2 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors cursor-pointer"
+                      aria-label="Eliminar link"
                     >
-                      Eliminar
+                      <Trash2 size={18} />
                     </button>
                   </form>
                 </li>
